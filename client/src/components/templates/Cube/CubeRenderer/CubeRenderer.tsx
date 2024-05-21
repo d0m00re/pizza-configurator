@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from 'react'
 import * as THREE from "@react-three/fiber";
 import * as three from "three"
-import * as obj from "./../../../obj";
+import * as obj from "./../../../../obj";
 import { useGLTF } from '@react-three/drei';
-import useCubeStore from '../../../store/cube.zustand';
+import useCubeStore from '../../../../store/cube.zustand';
 
 type Props = {}
 

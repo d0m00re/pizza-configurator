@@ -1,5 +1,5 @@
 import React from 'react'
-import useCubeStore from '../../../store/cube.zustand'
+import useCubeStore from '../../../../store/cube.zustand'
 
 function ChooseColor() {
     const storeCube = useCubeStore();

@@ -1,24 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import CubeRenderer from './components/templates/CubeRenderer';
 import * as THREE from "@react-three/fiber";
-import { Stats, OrbitControls } from '@react-three/drei'
-import ChooseColor from './components/templates/ChooseColor/ChooseColor';
+import { Stats, OrbitControls } from '@react-three/drei';
+import * as Cube from "./components/templates/Cube";
+import Pizza from './components/templates/Pizza/Pizza';
+import { PizzaConfigurator } from './components/templates/Pizza';
 
 function App() {
   return (
     <div id="canvas-container" style={{ width: "100vw", height: "100vh" }}>
-      <ChooseColor />
+      <PizzaConfigurator />
       <THREE.Canvas shadows>
-        <ambientLight intensity={0.1} />
+        <ambientLight intensity={0.5} />
         <directionalLight color="white" position={[0, 0, 5]} />
-        <CubeRenderer />
+        <Pizza />
         <OrbitControls />
       </THREE.Canvas>
     </div>
   )
 }
+
+/*
+function App() {
+  return (
+    <div id="canvas-container" style={{ width: "100vw", height: "100vh" }}>
+      <Cube.CubeChooseColor />
+      <THREE.Canvas shadows>
+        <ambientLight intensity={0.1} />
+        <directionalLight color="white" position={[0, 0, 5]} />
+        <Cube.CubeRenderer />
+        <OrbitControls />
+      </THREE.Canvas>
+    </div>
+  )
+}
+*/
 
 export default App
