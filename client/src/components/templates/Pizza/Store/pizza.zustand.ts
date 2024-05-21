@@ -15,6 +15,7 @@ export interface PizzaState {
   olives: IOlive[];
   addOlive: (pos: IVect3d) => void;
   updateOlives: () => void;
+  setAllOlives: (olives : IOlive[]) => void;
 }
 
 let nextId = 0;
@@ -26,10 +27,11 @@ const usePizzaStore = create<PizzaState>((set) => ({
   olives: [],
   addOlive: (pos) =>
     set((state) => ({
+      ...state,
       olives: [
-        ...state.olives,
+        ...state.olives, 
         { id: nextId++, pos, velocity: [0, 0, 0] },
-      ],
+      ]
     })),
   updateOlives: () =>
     set((state) => ({
@@ -37,7 +39,7 @@ const usePizzaStore = create<PizzaState>((set) => ({
         ...olive,
         pos: [
           olive.pos[0],
-          ((olive.pos[1] + olive.velocity[1]) > 0) ? (olive.pos[1] + olive.velocity[1]) : 0,
+          olive.pos[1] + olive.velocity[1],
           olive.pos[2],
         ],
         velocity: [
@@ -47,6 +49,7 @@ const usePizzaStore = create<PizzaState>((set) => ({
         ],
       })),
     })),
+    setAllOlives: (olives) => set({ olives })
 }));
 
 export default usePizzaStore;

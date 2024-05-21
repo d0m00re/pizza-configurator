@@ -4,9 +4,26 @@ import { useFrame } from '@react-three/fiber';
 import * as three from "three"
 import * as obj from "./../model";
 import { useGLTF } from '@react-three/drei';
-import usePizzaStore from './../Store/pizza.zustand';
+import usePizzaStore, { IOlive } from './../Store/pizza.zustand';
+
+const genNewOliveWtVelocity = ({ olive, appliedVelo }: { olive: IOlive, appliedVelo: boolean }): IOlive => {
+    return ({
+        ...olive,
+        pos: [
+            olive.pos[0],
+            (appliedVelo) ? olive.pos[1] + olive.velocity[1] : olive.pos[1],
+            olive.pos[2],
+        ],
+        velocity: [
+            olive.velocity[0],
+            (appliedVelo) ? olive.velocity[1] - 0.01 : olive.velocity[1], // Apply gravity
+            olive.velocity[2],
+        ],
+    })
+}
 
 function PizzaView() {
+    const threeRef = THREE.useThree();
     const pizza = useGLTF(obj.pizzaRache);
     const olive = useGLTF(obj.olive);
 
@@ -14,27 +31,49 @@ function PizzaView() {
     const storePizza = usePizzaStore();
 
     useEffect(() => {
-     //   console.log("olive : ")
-        console.log(storePizza.olives)
-    }, [storePizza.olives])
-    
-
-    useEffect(() => {
         if (meshRef.current) {
             // Traverse through the scene to find the mesh and set its material
-            
-            meshRef.current?.traverse((child : any) => {
+
+            meshRef.current?.traverse((child: any) => {
                 if (child.name === "basePizza" || child.name === "centerPizza") {
-                    child.material = new three.MeshStandardMaterial({color : storePizza.colorBase})
+                    child.material = new three.MeshStandardMaterial({ color: storePizza.colorBase })
                 }
             })
         }
     }, [pizza.scene, storePizza.colorBase]);
 
+    const updtOlive = (_olive: IOlive): IOlive => {
+        let olive = _olive;
+        const raycaster = new three.Raycaster(
+            new three.Vector3(...olive.pos),
+            new three.Vector3(0, -1, 0),
+            0,
+            10
+        );
+        
+        let intersects: any[] = raycaster.intersectObjects(threeRef.scene.children);
+        intersects = intersects.filter(e => e.object.name === 'centerPizza');
+
+        if (intersects.length) {
+            olive = genNewOliveWtVelocity({ olive, appliedVelo: intersects[0].distance > 0.1 });
+        } else {
+            olive = genNewOliveWtVelocity({ olive, appliedVelo: true });
+        }
+        
+        return olive;
+    }
+
+    
     useFrame(() => {
-       // console.log(storePizza.olives)
-        storePizza.updateOlives();
+        // use raytracer for predict next pos
+        if (storePizza.olives.length) {
+            let newOlives = storePizza.olives.map(olive => updtOlive(olive));
+            storePizza.setAllOlives(newOlives);
+            //raycaster.setFromCamera(mouse, threeRef.current.camera);
+
+        }
     })
+    
 
     return (
         <object3D>
@@ -48,9 +87,8 @@ function PizzaView() {
             />
 
             {
-                storePizza.olives.map((e, i) => <object3D position={e.pos}>
+                storePizza.olives.map((e, i) => <object3D key={`olive-${e.id}`} position={e.pos}>
                     <primitive
-                        key={`olive-${e.id}`}
                         object={olive.scene.clone()}
                     />
                 </object3D>)

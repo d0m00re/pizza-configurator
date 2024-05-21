@@ -1,6 +1,6 @@
 import './App.css'
 import * as THREE from "@react-three/fiber";
-import { Stats, OrbitControls } from '@react-three/drei';
+import { Stats, OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import * as Cube from "./components/templates/Cube";
 import Pizza from './components/templates/Pizza/Pizza';
 import { PizzaConfigurator } from './components/templates/Pizza';
@@ -13,7 +13,11 @@ function App() {
         <ambientLight intensity={0.5} />
         <directionalLight color="white" position={[0, 0, 5]} />
         <Pizza />
-        <OrbitControls />
+        <PerspectiveCamera makeDefault position={[0,2,1]} />
+        <OrbitControls target={[0, 0, 0]} />
+        {/*}
+          <OrbitControls />
+        */}
       </THREE.Canvas>
     </div>
   )
