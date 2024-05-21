@@ -6,11 +6,22 @@ const color = [
     "green"
 ]
 
+function getRandomPointInCircle(radius: number): [number, number] {
+    const theta = 2 * Math.PI * Math.random();
+    const r = radius * Math.sqrt(Math.random());
+  
+    const x = r * Math.cos(theta);
+    const y = r * Math.sin(theta);
+  
+    return [x, y];
+  }
+
 export type IVect3d = [number, number, number];
 
-const genOlivePosRandom = () : IVect3d => {
+const genPosRandom = () : IVect3d => {
     //return [0.1, 1, 0.1];
-    return [Math.random() * 1 - 0.5, 1, Math.random() * 1 - 0.5];
+    let posCircle = getRandomPointInCircle(0.45);
+    return [posCircle[0], 1, posCircle[1]];
 }
 
 function PizzaConfigurator() {
@@ -25,11 +36,27 @@ function PizzaConfigurator() {
                 </button>)
             }
             <button onClick={() => {
-                const position: [number, number, number] = genOlivePosRandom();
-                console.log("onCLick")
+                const position: [number, number, number] = genPosRandom();
+                console.log("onClick")
                 storePizza.addOlive(position);
             }}>
                 Add olive {storePizza.olives.length}
+            </button>
+
+            <button onClick={() => {
+                const position: [number, number, number] = genPosRandom();
+                console.log("onClick")
+                storePizza.addChorizons(position);
+            }}>
+                Add chorizon {storePizza.chorizons.length}
+            </button>
+
+            <button onClick={() => {
+                const position: [number, number, number] = genPosRandom();
+                console.log("onClick")
+                storePizza.addMushroom(position);
+            }}>
+                Add mushroom slice {storePizza.mushrooms.length}
             </button>
         </section>
     )

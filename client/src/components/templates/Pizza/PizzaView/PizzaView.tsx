@@ -6,26 +6,12 @@ import * as obj from "./../model";
 import { useGLTF } from '@react-three/drei';
 import usePizzaStore, { IOlive } from './../Store/pizza.zustand';
 
-const genNewOliveWtVelocity = ({ olive, appliedVelo }: { olive: IOlive, appliedVelo: boolean }): IOlive => {
-    return ({
-        ...olive,
-        pos: [
-            olive.pos[0],
-            (appliedVelo) ? olive.pos[1] + olive.velocity[1] : olive.pos[1],
-            olive.pos[2],
-        ],
-        velocity: [
-            olive.velocity[0],
-            (appliedVelo) ? olive.velocity[1] - 0.01 : olive.velocity[1], // Apply gravity
-            olive.velocity[2],
-        ],
-    })
-}
-
 function PizzaView() {
     const threeRef = THREE.useThree();
     const pizza = useGLTF(obj.pizzaRache);
     const olive = useGLTF(obj.olive);
+    const chorizo = useGLTF(obj.chorizon);
+    const mushroom = useGLTF(obj.mushroomSlice);
 
     const meshRef = useRef<any>(null);
     const storePizza = usePizzaStore();
@@ -41,37 +27,11 @@ function PizzaView() {
             })
         }
     }, [pizza.scene, storePizza.colorBase]);
-
-    const updtOlive = (_olive: IOlive): IOlive => {
-        let olive = _olive;
-        const raycaster = new three.Raycaster(
-            new three.Vector3(...olive.pos),
-            new three.Vector3(0, -1, 0),
-            0,
-            10
-        );
-        
-        let intersects: any[] = raycaster.intersectObjects(threeRef.scene.children);
-        intersects = intersects.filter(e => e.object.name === 'centerPizza');
-
-        if (intersects.length) {
-            olive = genNewOliveWtVelocity({ olive, appliedVelo: intersects[0].distance > 0.1 });
-        } else {
-            olive = genNewOliveWtVelocity({ olive, appliedVelo: true });
-        }
-        
-        return olive;
-    }
-
-    
+ 
     useFrame(() => {
-        // use raytracer for predict next pos
-        if (storePizza.olives.length) {
-            let newOlives = storePizza.olives.map(olive => updtOlive(olive));
-            storePizza.setAllOlives(newOlives);
-            //raycaster.setFromCamera(mouse, threeRef.current.camera);
-
-        }
+            storePizza.updateOlives();
+            storePizza.updateChorizons();
+            storePizza.updateMushroom();
     })
     
 
@@ -90,6 +50,20 @@ function PizzaView() {
                 storePizza.olives.map((e, i) => <object3D key={`olive-${e.id}`} position={e.pos}>
                     <primitive
                         object={olive.scene.clone()}
+                    />
+                </object3D>)
+            }
+            {
+                storePizza.chorizons.map((e, i) => <object3D key={`chorizon-${e.id}`} position={e.pos}>
+                    <primitive
+                        object={chorizo.scene.clone()}
+                    />
+                </object3D>)
+            }
+            {
+                storePizza.mushrooms.map((e, i) => <object3D key={`mushroom-${e.id}`} position={e.pos}>
+                    <primitive
+                        object={mushroom.scene.clone()}
                     />
                 </object3D>)
             }
