@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react'
-import * as THREE from "@react-three/fiber";
 import * as three from "three"
 import * as obj from "./../../../../obj";
 import { useGLTF } from '@react-three/drei';
@@ -7,7 +6,7 @@ import useCubeStore from '../../../../store/cube.zustand';
 
 type Props = {}
 
-function Main({ }: Props) {
+function CubeRenderer({ }: Props) {
     const { scene } = useGLTF(obj.cube);
     const meshRef = useRef<any>(null);
         const storeCube = useCubeStore();
@@ -39,4 +38,4 @@ function Main({ }: Props) {
     )
 }
 
-export default Main
+export default CubeRenderer;

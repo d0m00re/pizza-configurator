@@ -1,18 +1,21 @@
 // src/store.ts
 import { create } from 'zustand';
 import type { } from '@redux-devtools/extension'; // required for devtools typing
-import { IGenElem, IVect3d, TKindIngrediant, infoIngredient } from '../config/config';
-
-
+import { IGenIngredient, IGenIngredientElem, IVect3d, TKindIngrediant, TKindPizzaSize, infoIngredient } from '../config/config';
+import { rotate } from 'three/examples/jsm/nodes/Nodes.js';
 
 export interface PizzaState {
   colorBase: string;
-  ingredients: IGenElem[];
+  ingredients: IGenIngredient[];
   setColorBase: (color: string) => void;
 
-  addIngredient: (kind: TKindIngrediant, pos: IVect3d) => void;
+  addIngredient: (kind: TKindIngrediant, data : IGenIngredientElem) => void;
+  addListIngr: (kind: TKindIngrediant, datas : IGenIngredientElem[]) => void;
   updateIngredient: () => void;
-  setAllIngredient: (ingredient: IGenElem[]) => void;
+  setAllIngredient: (ingredient: IGenIngredient[]) => void;
+
+  size : TKindPizzaSize;
+  setSize : (size : TKindPizzaSize) => void;
 }
 
 let nextId = 0;
@@ -21,14 +24,39 @@ const usePizzaStore = create<PizzaState>((set) => ({
   colorBase: 'red',
   setColorBase: (color) => set(() => ({ colorBase: color })),
   ingredients: [],
-  addIngredient: (kind, pos) =>
+  addIngredient: (kind, data) =>
     set((state) => ({
       ...state,
       ingredients: [
         ...state.ingredients,
-        { kind: kind, id: nextId++, pos, velocity: [0, 0, 0] },
+        {
+          kind: kind,
+          id: nextId++,
+          pos : data.pos,
+          rot : data.rot,
+          velocity: [0, 0, 0]
+        },
       ]
     })),
+  addListIngr: (kind, datas) => {
+    let newIngredients : IGenIngredient[] = datas.map((data, i) => ({
+      kind : kind,
+      pos : data.pos,
+      rot : data.rot,
+      velocity : [0,0,0],
+      id : nextId + i
+    }));
+
+    nextId += newIngredients.length;
+
+    set((state) => ({
+      ...state,
+      ingredients: [
+        ...state.ingredients,
+        ...newIngredients
+      ]
+    }))
+  },
   updateIngredient: () =>
     set((state) => ({
       ingredients: state.ingredients.map((ingredient) => ({
@@ -45,7 +73,10 @@ const usePizzaStore = create<PizzaState>((set) => ({
         ],
       })),
     })),
-  setAllIngredient: (ingredients) => set({ ingredients })
+  setAllIngredient: (ingredients) => set({ ingredients }),
+
+  size : "small",
+  setSize : (size) => set({size})
 }));
 
 export default usePizzaStore;
