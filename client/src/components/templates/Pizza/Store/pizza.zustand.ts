@@ -1,20 +1,9 @@
 // src/store.ts
 import { create } from 'zustand';
 import type { } from '@redux-devtools/extension'; // required for devtools typing
-type IVect3d = [number, number, number];
+import { IGenElem, IVect3d, TKindIngrediant, infoIngredient } from '../config/config';
 
-type TKindIngrediant = "mushroom" | "olive" | "chorizon";
 
-export interface IGenElem {
-  kind: TKindIngrediant;
-  id: number;
-  pos: IVect3d;
-  velocity: IVect3d;
-}
-
-export interface IOlive extends IGenElem { };
-export interface IChorizon extends IGenElem { };
-export interface IMushroom extends IGenElem { };
 
 export interface PizzaState {
   colorBase: string;
@@ -46,7 +35,7 @@ const usePizzaStore = create<PizzaState>((set) => ({
         ...ingredient,
         pos: [
           ingredient.pos[0],
-          Math.max(ingredient.pos[1] + ingredient.velocity[1], 0.02),
+          Math.max(ingredient.pos[1] + ingredient.velocity[1], infoIngredient[ingredient.kind].endZ),
           ingredient.pos[2],
         ],
         velocity: [

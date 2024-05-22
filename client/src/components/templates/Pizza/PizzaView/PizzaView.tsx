@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import * as three from "three"
 import * as obj from "./../model";
 import { useGLTF } from '@react-three/drei';
-import usePizzaStore, { IOlive } from './../Store/pizza.zustand';
+import usePizzaStore from './../Store/pizza.zustand';
 
 function PizzaView() {
     const threeRef = THREE.useThree();
