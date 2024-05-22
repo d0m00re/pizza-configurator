@@ -38,25 +38,25 @@ function PizzaConfigurator() {
             <button onClick={() => {
                 const position: [number, number, number] = genPosRandom();
                 console.log("onClick")
-                storePizza.addOlive(position);
+                storePizza.addIngredient("olive",position);
             }}>
-                Add olive {storePizza.olives.length}
+                Add olive {storePizza.ingredients.filter(e => e.kind === "olive").length}
             </button>
 
             <button onClick={() => {
                 const position: [number, number, number] = genPosRandom();
                 console.log("onClick")
-                storePizza.addChorizons(position);
+                storePizza.addIngredient("chorizon", position);
             }}>
-                Add chorizon {storePizza.chorizons.length}
+                Add chorizon {storePizza.ingredients.filter(e => e.kind === "chorizon").length}
             </button>
 
             <button onClick={() => {
                 const position: [number, number, number] = genPosRandom();
                 console.log("onClick")
-                storePizza.addMushroom(position);
+                storePizza.addIngredient("mushroom", position);
             }}>
-                Add mushroom slice {storePizza.mushrooms.length}
+                Add mushroom slice {storePizza.ingredients.filter(e => e.kind === "mushroom").length}
             </button>
         </section>
     )

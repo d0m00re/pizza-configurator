@@ -29,9 +29,7 @@ function PizzaView() {
     }, [pizza.scene, storePizza.colorBase]);
  
     useFrame(() => {
-            storePizza.updateOlives();
-            storePizza.updateChorizons();
-            storePizza.updateMushroom();
+            storePizza.updateIngredient();
     })
     
 
@@ -47,21 +45,21 @@ function PizzaView() {
             />
 
             {
-                storePizza.olives.map((e, i) => <object3D key={`olive-${e.id}`} position={e.pos}>
+                storePizza.ingredients.filter(e => e.kind === "olive").map((e, i) => <object3D key={`olive-${e.id}`} position={e.pos}>
                     <primitive
                         object={olive.scene.clone()}
                     />
                 </object3D>)
             }
             {
-                storePizza.chorizons.map((e, i) => <object3D key={`chorizon-${e.id}`} position={e.pos}>
+                storePizza.ingredients.filter(e => e.kind === "chorizon").map((e, i) => <object3D key={`chorizon-${e.id}`} position={e.pos}>
                     <primitive
                         object={chorizo.scene.clone()}
                     />
                 </object3D>)
             }
             {
-                storePizza.mushrooms.map((e, i) => <object3D key={`mushroom-${e.id}`} position={e.pos}>
+                storePizza.ingredients.filter(e => e.kind === "mushroom").map((e, i) => <object3D key={`mushroom-${e.id}`} position={e.pos}>
                     <primitive
                         object={mushroom.scene.clone()}
                     />
