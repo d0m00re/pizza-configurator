@@ -1,7 +1,5 @@
-import './App.css'
 import * as THREE from "@react-three/fiber";
-import { Stats, OrbitControls, PerspectiveCamera } from '@react-three/drei';
-import * as Cube from "./components/templates/Cube";
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import Pizza from './components/templates/Pizza/Pizza';
 import { PizzaConfigurator } from './components/templates/Pizza';
 

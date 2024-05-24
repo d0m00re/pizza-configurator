@@ -21,11 +21,13 @@ function PizzaView() {
         if (meshRef.current) {
             // Traverse through the scene to find the mesh and set its material
 
+            {/*}
             meshRef.current?.traverse((child: any) => {
                 if (child.name === "basePizza" || child.name === "centerPizza") {
                     child.material = new three.MeshStandardMaterial({ color: storePizza.colorBase })
                 }
             })
+        */}
         }
     }, [pizza.scene, storePizza.colorBase]);
  
@@ -35,16 +37,19 @@ function PizzaView() {
     
 
     return (
+        <>
+        <pointLight position={[0, 1, 0]} intensity={1} color="#fff" />
         <object3D scale={infoSizePizza[storePizza.size].scale}>
             <primitive
                 name="pizzaConfig"
                 object={pizza.scene}
                 ref={meshRef}
             />
+            {/*
             <meshStandardMaterial
                 color={storePizza.colorBase}
             />
-
+    */}
             {
                 storePizza.ingredients.filter(e => e.kind === "olive").map((e) => <object3D key={`olive-${e.id}`} rotation={e.rot} position={e.pos}>
                     <primitive
@@ -67,6 +72,7 @@ function PizzaView() {
                 </object3D>)
             }
         </object3D>
+        </>
     )
 }
 
