@@ -7,11 +7,7 @@ function ChooseColor() {
  
     return (
     <div>
-        <div style={{
-            display : "flex",
-            gap : "2px",
-            justifyContent : "center"
-        }}>
+        <div className='flex justify-center gap-2'>
             <button onClick={() => storeCube.setColor("yellow")}>yellow</button>
             <button onClick={() => storeCube.setColor("green")}>green</button>
             <button onClick={() => storeCube.setColor("red")}>red</button>

@@ -11,6 +11,7 @@ export interface PizzaState {
 
   addIngredient: (kind: TKindIngrediant, data : IGenIngredientElem) => void;
   addListIngr: (kind: TKindIngrediant, datas : IGenIngredientElem[]) => void;
+  deleteListIngr : (kind : TKindIngrediant) => void;
   updateIngredient: () => void;
   setAllIngredient: (ingredient: IGenIngredient[]) => void;
 
@@ -57,6 +58,24 @@ const usePizzaStore = create<PizzaState>((set) => ({
       ]
     }))
   },
+  deleteListIngr : (kind) => {
+    // les count nb delete
+    let nbDelete = infoIngredient[kind].nbPop;
+    let countNbDelete = 0;
+    set((state) => {
+      let newArr : IGenIngredient[] = [];
+      let newListIngredient = state.ingredients;
+      for (let i = 0; i < newListIngredient.length; i++) {
+        let currElem = newListIngredient[i];
+        if ((kind !== currElem.kind) || (countNbDelete === nbDelete)) {
+          newArr.push(currElem);
+        } else {
+          countNbDelete++;
+        }
+      }
+      return {...state, ingredients : newArr};
+    })
+  } ,
   updateIngredient: () =>
     set((state) => ({
       ingredients: state.ingredients.map((ingredient) => ({
