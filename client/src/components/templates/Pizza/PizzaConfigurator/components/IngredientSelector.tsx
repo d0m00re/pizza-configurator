@@ -48,7 +48,7 @@ const IconDecr = () => {
 
 const IngredientAddDecr = (props: IIngredientAddDecr) => {
     return (
-        <section className='flex flex-row justify-between'>
+        <section className='flex flex-row justify-between gap-2 items-center'>
             <Button onClick={props.add}>
                 <IconPlus />
             </Button>

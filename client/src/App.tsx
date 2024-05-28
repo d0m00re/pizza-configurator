@@ -17,7 +17,7 @@ function App() {
           <OrbitControls target={[0, 0, 0]} />
         </THREE.Canvas>
       </section>
-      <section className=" w-1/3">
+      <section className=" w-1/3 flex  justify-center items-center">
         <PizzaConfigurator />
       </section>
     </div>
