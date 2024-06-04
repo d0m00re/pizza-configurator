@@ -36,21 +36,91 @@ const makeEmptyObjectInfo = (): IObjectInfo => {
 /**
  * each array elem describe animation step with target position and rotation
  */
-const animationStep = [
+
+interface IAnimationStep {
+    object: IObjectInfo;
+    nbStep: number;
+}
+
+const animationStepList: IAnimationStep[] = [
     {
-        pizzaInfo : {
-            position : [0,0,0],
-            rotation : [0,0,0]
+        object: {
+            pizzaInfo: {
+                position: [3, 0, 0],
+                rotation: [0, 0, 0]
+            },
+            toolInfo: {
+                position: [3, 0, 0],
+                rotation: [0, -(C_PI_RAD / 2), 0]
+            }
         },
-        toolInfo: {
-            position: [0, -0.1, 0],
-            rotation: [0, 0, 0]
-        }
+        nbStep: 50
+    }, {
+        object: {
+            pizzaInfo: {
+                position: [0, 0, -4],
+                rotation: [0, 0, 0]
+            },
+            toolInfo: {
+                position: [0, 0, -4],
+                rotation: [0, 0, 0]
+            }
+        },
+        nbStep: 50
+    },{
+        object: {
+            pizzaInfo: {
+                position: [0, 0, 0],
+                rotation: [0, 0, 0]
+            },
+            toolInfo: {
+                position: [0, 0, 10],
+                rotation: [0, 0, 0]
+            }
+        },
+        nbStep: 50
     }
-]
+];
+
+const generatePointIncrement = (pts: IVect3d, nbStep: number): IVect3d => {
+    return [
+        pts[0] / nbStep,
+        pts[1] / nbStep,
+        pts[2] / nbStep
+    ];
+}
+
+const addTwoVec3d = (v1 : IVect3d, v2 : IVect3d) : IVect3d => {
+    return [
+        v1[0] + v2[0],
+        v1[1] + v2[1],
+        v1[2] + v2[2]
+    ]
+}
+
+const generateStepAnimation = (origin: IObjectInfo, animationStepL: IAnimationStep): IAnimationStep => {
+
+    let _animationStep = cloneDeep(animationStepL);
+    //
+    _animationStep.object.pizzaInfo.position = generatePointIncrement(_animationStep.object.pizzaInfo.position, _animationStep.nbStep);
+    _animationStep.object.pizzaInfo.rotation = generatePointIncrement(_animationStep.object.pizzaInfo.rotation, _animationStep.nbStep);
+
+    _animationStep.object.toolInfo.position = generatePointIncrement(_animationStep.object.toolInfo.position, _animationStep.nbStep);
+    _animationStep.object.toolInfo.rotation = generatePointIncrement(_animationStep.object.toolInfo.rotation, _animationStep.nbStep);
+
+
+    return {
+        object: _animationStep.object,
+        nbStep: _animationStep.nbStep
+    };
+}
+
+// 0) init
+// 1) generate step animation for current position / rot
 
 function PizzaView() {
-
+    const [animationStep, setAnimationStep] = useState(0);
+    const [animationData, setAnimationData] = useState<IAnimationStep>()
     const [objectInfo, setObjectInfo] = useState<IObjectInfo>(makeEmptyObjectInfo());
     const threeRef = THREE.useThree();
     const pizzaModel = useGLTF(obj.pizzaRache);
@@ -62,6 +132,14 @@ function PizzaView() {
 
     const meshRef = useRef<any>(null);
     const storePizza = usePizzaStore();
+
+    useEffect(() => {
+        const dataAnimStep = generateStepAnimation(objectInfo, animationStepList[animationStep]);
+        console.log("data anim step")
+        console.log(dataAnimStep);
+        setAnimationData(dataAnimStep);
+    }, [animationStep])
+    
 
     useEffect(() => {
         if (meshRef.current) {
@@ -83,21 +161,23 @@ function PizzaView() {
         //
         console.log("step : ", storePizza.step)
         if (storePizza.step === "waitCommand") {
-            let dup = cloneDeep(objectInfo);
+            if (animationData && animationData?.nbStep && animationData?.nbStep > 0) {
+                let dupObjectInfo = cloneDeep(objectInfo);
+                
 
-            if (objectInfo.pizzaInfo.rotation[1] > -(C_PI_RAD / 2)) {
-                dup.pizzaInfo.rotation[1] -= 0.08;
-            } else {
+                // update
+                dupObjectInfo.pizzaInfo.position = addTwoVec3d(dupObjectInfo.pizzaInfo.position, animationData.object.pizzaInfo.position);
+                dupObjectInfo.pizzaInfo.rotation = addTwoVec3d(dupObjectInfo.pizzaInfo.rotation, animationData.object.pizzaInfo.rotation);
+                dupObjectInfo.toolInfo.position = addTwoVec3d(dupObjectInfo.toolInfo.position, animationData.object.toolInfo.position);
+                dupObjectInfo.toolInfo.rotation = addTwoVec3d(dupObjectInfo.toolInfo.rotation, animationData.object.toolInfo.rotation);
 
+                // @ts-ignore
+                setAnimationData(old => ({...old, nbStep : old?.nbStep - 1}))
+                setObjectInfo(dupObjectInfo);
             }
-
-            if (dup.pizzaInfo.position[0] < 3) {
-                dup.pizzaInfo.position[0] += 0.15;
-            } else if (dup.pizzaInfo.position[2] > -4) {
-                dup.pizzaInfo.position[2] -= 0.2;
+            else if (animationData?.nbStep === 0 && animationStep < animationStepList.length - 1) {
+                setAnimationStep(old => old + 1);
             }
-
-            setObjectInfo(dup);
         }
     })
 
@@ -107,7 +187,7 @@ function PizzaView() {
             <object3D
                 scale={infoSizePizza[storePizza.size].scale}
                 position={objectInfo.pizzaInfo.position}
-                rotation={objectInfo.pizzaInfo.rotation}    
+                rotation={objectInfo.pizzaInfo.rotation}
             >
                 <primitive
                     name="pizzaConfig"
