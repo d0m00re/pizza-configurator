@@ -18,7 +18,7 @@ const Camera = () => {
 
         if (storePizza.step === "chooseIngrediant" && zoom > 15)
                 setZoom(old => old - 0.1);
-        else if (storePizza.step === "buy" && zoom > 2)
+        else if ((storePizza.step === "buy" || storePizza.step === "waitCommand") && zoom > 2)
                 setZoom(old => old - 0.1);
 
         // @ts-ignore
