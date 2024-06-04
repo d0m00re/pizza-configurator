@@ -7,12 +7,16 @@ import { useGLTF } from '@react-three/drei';
 import usePizzaStore from './../Store/pizza.zustand';
 import { infoSizePizza } from '../config/config';
 
+const C_PI_RAD = 3.1415926536;
+
 function PizzaView() {
     const threeRef = THREE.useThree();
-    const pizza = useGLTF(obj.pizzaRache);
-    const olive = useGLTF(obj.olive);
-    const chorizo = useGLTF(obj.chorizon);
-    const mushroom = useGLTF(obj.mushroomSlice);
+    const pizzaModel = useGLTF(obj.pizzaRache);
+    const oliveModel = useGLTF(obj.olive);
+    const chorizoModel = useGLTF(obj.chorizon);
+    const mushroomModel = useGLTF(obj.mushroomSlice);
+    const toolModel = useGLTF(obj.pizzaTool);
+    const hovenModel = useGLTF(obj.hoven);
 
     const meshRef = useRef<any>(null);
     const storePizza = usePizzaStore();
@@ -29,49 +33,73 @@ function PizzaView() {
             })
         */}
         }
-    }, [pizza.scene, storePizza.colorBase]);
- 
+    }, [pizzaModel.scene, storePizza.colorBase]);
+
     useFrame(() => {
-            storePizza.updateIngredient();
+        storePizza.updateIngredient();
     })
-    
 
     return (
         <>
-        <pointLight position={[0, 1, 0]} intensity={1} color="#fff" />
-        <object3D scale={infoSizePizza[storePizza.size].scale}>
-            <primitive
-                name="pizzaConfig"
-                object={pizza.scene}
-                ref={meshRef}
-            />
-            {/*
+            <pointLight position={[0, 1, 0]} intensity={1} color="#fff" />
+            <object3D scale={infoSizePizza[storePizza.size].scale}>
+                <primitive
+                    name="pizzaConfig"
+                    object={pizzaModel.scene}
+                    ref={meshRef}
+                />
+                {(storePizza.step === "buy" || storePizza.step === "waitCommand") ?
+                    <object3D position={[0, -0.1, 0]}>
+                        <primitive
+                            name="pizzaTool"
+                            object={toolModel.scene}
+                            ref={meshRef}
+                        />
+                    </object3D> : <></>
+                }
+
+                {
+                    (storePizza.step === "buy" || storePizza.step === "waitCommand") ?
+                        <object3D
+                            position={[3,0,-5]}
+                            rotation={[0, -C_PI_RAD / 2,0]}
+                        >
+                            <primitive
+                                name="hoven"
+                                object={hovenModel.scene}
+                                ref={meshRef}
+                            />
+                        </object3D> : <></>
+                }
+                {/*
             <meshStandardMaterial
                 color={storePizza.colorBase}
             />
     */}
-            {
-                storePizza.ingredients.filter(e => e.kind === "olive").map((e) => <object3D key={`olive-${e.id}`} rotation={e.rot} position={e.pos}>
-                    <primitive
-                        object={olive.scene.clone()}
-                    />
-                </object3D>)
-            }
-            {
-                storePizza.ingredients.filter(e => e.kind === "chorizon").map((e) => <object3D key={`chorizon-${e.id}`} rotation={e.rot} position={e.pos}>
-                    <primitive
-                        object={chorizo.scene.clone()}
-                    />
-                </object3D>)
-            }
-            {
-                storePizza.ingredients.filter(e => e.kind === "mushroom").map((e) => <object3D key={`mushroom-${e.id}`} rotation={e.rot} position={e.pos}>
-                    <primitive
-                        object={mushroom.scene.clone()}
-                    />
-                </object3D>)
-            }
-        </object3D>
+                {
+                    storePizza.ingredients.filter(e => e.kind === "olive").map((e) => <object3D key={`olive-${e.id}`} rotation={e.rot} position={e.pos}>
+                        <primitive
+                            object={oliveModel.scene.clone()}
+                        />
+                    </object3D>)
+                }
+                {
+                    storePizza.ingredients.filter(e => e.kind === "chorizon").map((e) => <object3D key={`chorizon-${e.id}`} rotation={e.rot} position={e.pos}>
+                        <primitive
+
+                            object={chorizoModel.scene.clone()}
+                        />
+                    </object3D>)
+                }
+                {
+                    storePizza.ingredients.filter(e => e.kind === "mushroom").map((e) => <object3D key={`mushroom-${e.id}`} rotation={e.rot} position={e.pos}>
+                        <primitive
+                            object={mushroomModel.scene.clone()}
+                        />
+                    </object3D>)
+                }
+            </object3D>
+            <axesHelper />
         </>
     )
 }

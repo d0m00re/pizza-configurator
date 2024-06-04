@@ -3,6 +3,9 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import Pizza from './components/templates/Pizza/Pizza';
 import { PizzaConfigurator } from './components/templates/Pizza';
 import "./index.css";
+import Camera from "./components/templates/Pizza/components/Camera";
+
+//          <OrbitControls target={[0, 0, 0]} />
 
 function App() {
   return (
@@ -14,7 +17,7 @@ function App() {
           <directionalLight color="white" position={[0, 0, 5]} />
           <Pizza />
           <PerspectiveCamera makeDefault position={[0, 2, 1]} />
-          <OrbitControls target={[0, 0, 0]} />
+          <Camera />
         </THREE.Canvas>
       </section>
       <section className=" w-1/3 flex  justify-center items-center">

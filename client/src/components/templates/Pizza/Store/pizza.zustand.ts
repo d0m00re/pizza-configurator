@@ -1,8 +1,10 @@
 // src/store.ts
 import { create } from 'zustand';
 import type { } from '@redux-devtools/extension'; // required for devtools typing
-import { IGenIngredient, IGenIngredientElem, IVect3d, TKindIngrediant, TKindPizzaSize, infoIngredient } from '../config/config';
-import { rotate } from 'three/examples/jsm/nodes/Nodes.js';
+import { IGenIngredient, IGenIngredientElem, TKindIngrediant, TKindPizzaSize, infoIngredient } from '../config/config';
+
+export type TStepKind = "chooseSize" | "chooseIngrediant" | "buy" | "waitCommand";
+
 
 export interface PizzaState {
   colorBase: string;
@@ -17,6 +19,10 @@ export interface PizzaState {
 
   size : TKindPizzaSize;
   setSize : (size : TKindPizzaSize) => void;
+
+  step : TStepKind;
+  prevStep : () => void;
+  nextStep : () => void;
 }
 
 let nextId = 0;
@@ -25,6 +31,29 @@ const usePizzaStore = create<PizzaState>((set) => ({
   colorBase: 'red',
   setColorBase: (color) => set(() => ({ colorBase: color })),
   ingredients: [],
+  step : "chooseSize",
+  prevStep : () => {
+    set((state) => {
+      if (state.step === "chooseIngrediant")
+          state.step = "chooseSize";
+      else if (state.step === "buy")
+          state.step = "chooseIngrediant";
+      else if (state.step === "waitCommand")
+          state.step = "buy";
+      return state;
+    })
+  },
+  nextStep : () => {
+    set((state) => {
+      if (state.step === "chooseSize")
+          state.step = "chooseIngrediant";
+      else if (state.step === "chooseIngrediant")
+          state.step = "buy";
+      else if (state.step === "buy")
+          state.step = "waitCommand";
+      return state;
+    })
+  },
   addIngredient: (kind, data) =>
     set((state) => ({
       ...state,
