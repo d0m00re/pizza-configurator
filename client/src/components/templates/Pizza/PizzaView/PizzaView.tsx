@@ -6,6 +6,7 @@ import { useGLTF } from '@react-three/drei';
 import usePizzaStore from './../Store/pizza.zustand';
 import { IVect3d, infoSizePizza } from '../config/config';
 import cloneDeep from "lodash/cloneDeep";
+import Fire from '../components/Fire';
 
 const C_PI_RAD = 3.1415926536;
 
@@ -129,6 +130,7 @@ function PizzaView() {
     const mushroomModel = useGLTF(obj.mushroomSlice);
     const toolModel = useGLTF(obj.pizzaTool);
     const hovenModel = useGLTF(obj.hoven);
+    const fireBuche = useGLTF(obj.fireBuche);
 
     const meshRef = useRef<any>(null);
     const storePizza = usePizzaStore();
@@ -184,6 +186,17 @@ function PizzaView() {
     return (
         <>
             <pointLight position={[0, 1, 0]} intensity={1} color="#fff" />
+
+            <Fire />
+
+            {/*}
+            <object3D>
+                <primitive
+                    name="fireBuche"
+                    object={fireBuche.scene}
+                />
+            </object3D>
+       
             <object3D
                 scale={infoSizePizza[storePizza.size].scale}
                 position={objectInfo.pizzaInfo.position}
@@ -195,6 +208,7 @@ function PizzaView() {
                     ref={meshRef}
                 />
             </object3D>
+             */}
             <object3D>
                 {(storePizza.step === "buy" || storePizza.step === "waitCommand") ?
                     <object3D
@@ -221,11 +235,6 @@ function PizzaView() {
                             />
                         </object3D> : <></>
                 }
-                {/*
-            <meshStandardMaterial
-                color={storePizza.colorBase}
-            />
-    */}
                 {
                     storePizza.ingredients.filter(e => e.kind === "olive").map((e) => <object3D key={`olive-${e.id}`} rotation={e.rot} position={e.pos}>
                         <primitive

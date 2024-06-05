@@ -6,7 +6,7 @@ import useStorePizza from "./../Store/pizza.zustand";
 
 const Camera = () => {
     const cameraRef = useRef<any | null>(null);
-    const [zoom, setZoom] = useState(20);
+    const [zoom, setZoom] = useState(5) //(20);
     const storePizza = useStorePizza();
 
 
