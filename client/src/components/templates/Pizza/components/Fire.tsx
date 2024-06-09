@@ -1,70 +1,48 @@
-import { Canvas } from '@react-three/fiber';
+import * as THREE from 'three';
+import fireFragment from "./fireFragment.glsl?raw"
+import fireVertex from "./fireVertex.glsl?raw";
+import { useControls } from 'leva'
+import { useEffect } from 'react';
+import colorfullTexture from "./image.jpg"
 
-import { useRef } from 'react';
+//const sphere = new THREE.SphereGeometry(1, 28, 28);
+const sphere = new THREE.PlaneGeometry(2, 2);
 
+// Create a custom shader material
+const customMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    // Define your uniforms here if any
+  },
+ vertexShader: fireVertex,
+ fragmentShader: fireFragment //fragmentShader
+});
 
-//const fragmentShader = `...`;
+customMaterial.uniforms.uTime = {value : 0}
+customMaterial.uniforms.uRadius = {value : 0.2};
+customMaterial.uniforms.uTexture = {value : new THREE.TextureLoader().load(colorfullTexture)}
+console.log(customMaterial.uniforms)
+function Fire() {
+  const { myNumber } = useControls({
+    name : "jackouille",
+    myNumber : {
+      value: 0.2,
+      min : 0,
+      max : 2,
+      step : 0.05
+    }
+  })
 
-//const vertexShader = `...`;
+  useEffect(() => {
+    customMaterial.uniforms.uRadius ={value : myNumber};
+  }, [myNumber])
+  
 
-//import vertexShader from "./vertexShader.glsl"//"!!raw-loader!./vertexShader.glsl";
-//import fragmentShader from "!!raw-loader!./fragmentShader.glsl";
-
-const fragmentShader = `
-  varying vec3 Normal;
-  varying vec3 Position;
-
-  uniform vec3 Ka;
-  uniform vec3 Kd;
-  uniform vec3 Ks;
-  uniform vec4 LightPosition;
-  uniform vec3 LightIntensity;
-  uniform float Shininess;
-
-  vec3 phong() {
-    vec3 n = normalize(Normal);
-    vec3 s = normalize(vec3(LightPosition) - Position);
-    vec3 v = normalize(vec3(-Position));
-    vec3 r = reflect(-s, n);
-
-    vec3 ambient = Ka;
-    vec3 diffuse = Kd * max(dot(s, n), 0.0);
-    vec3 specular = Ks * pow(max(dot(r, v), 0.0), Shininess);
-
-    return LightIntensity * (ambient + diffuse + specular);
-  }
-
-  void main() {
-    vec3 blue = vec3(0.0, 0.0, 1.0);
-    gl_FragColor = vec4(blue*phong(), 1.0);
-}`
-
-const vertexShader = `
-  varying vec3 Normal;
-  varying vec3 Position;
-
-  void main() {
-    Normal = normalize(normalMatrix * normal);
-    Position = vec3(modelViewMatrix * vec4(position, 1.0));
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`
-
-
-const Cube = () => {
-  const mesh = useRef<any>();
-
-//wireframe
   return (
-    <mesh ref={mesh} position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={1.5}>
-      <planeGeometry args={[1, 1, 32, 32]} />
-      <shaderMaterial
-        fragmentShader={fragmentShader}
-        vertexShader={vertexShader}
-        
-      />
-    </mesh>
-  );
-};
+     <mesh
+      position={[0, 0, 0]}
+      geometry={sphere}
+      material={customMaterial} />
+  )
+}
 
-export default Cube;
+export default Fire;
