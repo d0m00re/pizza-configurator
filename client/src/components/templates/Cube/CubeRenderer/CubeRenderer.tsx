@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import * as three from "three"
 import * as obj from "./../../../../obj";
 import { useGLTF } from '@react-three/drei';

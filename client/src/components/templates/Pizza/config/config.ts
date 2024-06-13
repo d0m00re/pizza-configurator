@@ -1,6 +1,8 @@
-export type IVect3d = [number, number, number];
+import { IVect3d } from "../utils/vect3d";
+
 export type TKindIngrediant = "mushroom" | "olive" | "chorizon";
 export type TKindPizzaSize = "small" | "medium" | "xl";
+
 
 export interface IGenIngredient {
     kind: TKindIngrediant;
