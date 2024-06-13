@@ -137,8 +137,6 @@ function PizzaView() {
 
     useEffect(() => {
         const dataAnimStep = generateStepAnimation(objectInfo, animationStepList[animationStep]);
-        console.log("data anim step")
-        console.log(dataAnimStep);
         setAnimationData(dataAnimStep);
     }, [animationStep])
     

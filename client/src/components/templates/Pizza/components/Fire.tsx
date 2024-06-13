@@ -3,8 +3,9 @@ import fireFragment from "./fireFragment.glsl?raw"
 import fireVertex from "./fireVertex.glsl?raw";
 import { useFrame } from '@react-three/fiber'
 
-const sphere = new THREE.SphereGeometry(1, 28, 28);
+//const sphere = new THREE.SphereGeometry(1, 28, 28);
 //const sphere = new THREE.PlaneGeometry(2, 2);
+const sphere = new THREE.IcosahedronGeometry(1, 200);
 
 // Create a custom shader material
 const customMaterial = new THREE.ShaderMaterial({
@@ -16,7 +17,6 @@ const customMaterial = new THREE.ShaderMaterial({
 });
 
 customMaterial.uniforms.uTime = { value: 0 }
-console.log(customMaterial.uniforms)
 function Fire() {
   /*
   const { myNumber } = useControls({
@@ -35,7 +35,6 @@ function Fire() {
   */
 
   useFrame((state, delta, xrFrame) => {
-    console.log("use frame : ")
     customMaterial.uniforms.uTime.value += delta;
     // This function runs at the native refresh rate inside of a shared render-loop
   })
