@@ -4,6 +4,7 @@ import chorizon from "./chorizon.glb";
 import mushroomSlice from "./mushroomSlicev2.glb";
 import pizzaTool from "./pizzaTool.glb";
 import hoven from "./hoven.glb";
+import cheese from "./cheese.glb";
 
 export {
     pizzaRache,
@@ -11,5 +12,6 @@ export {
     chorizon,
     mushroomSlice,
     pizzaTool,
-    hoven
+    hoven,
+    cheese
 }

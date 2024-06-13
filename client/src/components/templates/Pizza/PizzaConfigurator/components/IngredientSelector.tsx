@@ -14,6 +14,7 @@ const newDataIngrediantGeneration = (kind: TKindIngrediant) => {
     let nbPopPts = infoIngredient[kind].nbPop;
 
     let arrPts: IGenIngredientElem[] = [];
+    console.log(`nb pts pops : ${nbPopPts}`)
     for (let i = 0; i < nbPopPts; i++) {
         arrPts.push({
             pos: genPosRandom(),
@@ -84,6 +85,12 @@ const IngredientSelector = () => {
                     decr={() => storePizza.deleteListIngr("chorizon")}
                 >
                     Chorizon
+                </IngredientAddDecr>
+                <IngredientAddDecr
+                    add={() => storePizza.addListIngr("cheese", newDataIngrediantGeneration("cheese"))}
+                    decr={() => storePizza.deleteListIngr("cheese")}
+                >
+                    Cheese
                 </IngredientAddDecr>
             </div>
         </section>)

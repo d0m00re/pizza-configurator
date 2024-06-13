@@ -16,6 +16,7 @@ function RenderIngr(props : IRenderIngr) {
     const oliveModel = useGLTF(obj.olive);
     const chorizoModel = useGLTF(obj.chorizon);
     const mushroomModel = useGLTF(obj.mushroomSlice);
+    const cheeseModel = useGLTF(obj.cheese);
 
     const getModelWithKind = (kind : TKindIngrediant) => {
         switch(kind) {
@@ -25,6 +26,8 @@ function RenderIngr(props : IRenderIngr) {
                 return chorizoModel.scene.clone();
             case "mushroom" :
                 return mushroomModel.scene.clone();
+            case "cheese":
+                return cheeseModel.scene.clone();
             default :
                 return mushroomModel.scene.clone();
         }

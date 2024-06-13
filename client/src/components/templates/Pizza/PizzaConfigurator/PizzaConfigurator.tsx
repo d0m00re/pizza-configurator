@@ -51,12 +51,15 @@ function PizzaConfigurator() {
             </CardHeader>
             <CardContent>
 
-                <currentElem.cpn />
-                {/*}            
-                <IngredientSelector />
+            {
 
-                <SizeSelector 7>
-            */}
+            }
+                <currentElem.cpn />
+              {/*              
+                <IngredientSelector /> 
+
+                <SizeSelector />
+                */}
             </CardContent>
             <section className="flex gap-2 justify-center">
                 {(storePizza.step === "chooseSize") ?

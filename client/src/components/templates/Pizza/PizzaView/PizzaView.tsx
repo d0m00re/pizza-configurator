@@ -108,10 +108,11 @@ function PizzaView() {
                             />
                         </object3D> : <></>
                 }
-                {/*
+                
             <meshStandardMaterial
                 color={storePizza.colorBase}
             />
+            {/*
             position={objectInfo.pizzaInfo.position}
     */}
                 <RenderIngr objectInfo={objectInfo} />
