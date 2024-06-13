@@ -1,113 +1,13 @@
 import { useRef, useEffect, useState } from 'react'
-import * as THREE from "@react-three/fiber";
 import { useFrame } from '@react-three/fiber';
 import * as obj from "./../model";
 import { useGLTF } from '@react-three/drei';
 import usePizzaStore from './../Store/pizza.zustand';
 import { infoSizePizza } from '../config/config';
 import cloneDeep from "lodash/cloneDeep";
-import { IVect3d, addVect3d } from '../utils/vect3d';
-
-const C_PI_RAD = 3.1415926536;
-
-interface IObjectInfo {
-    pizzaInfo: {
-        position: IVect3d;
-        rotation: IVect3d;
-    },
-    toolInfo: {
-        position: IVect3d;
-        rotation: IVect3d;
-    }
-}
-
-const makeEmptyObjectInfo = (): IObjectInfo => {
-    return {
-        pizzaInfo: {
-            position: [0, 0, 0],
-            rotation: [0, 0, 0]
-        },
-        toolInfo: {
-            position: [0, -0.1, 0],
-            rotation: [0, 0, 0]
-        }
-    }
-}
-
-/**
- * each array elem describe animation step with target position and rotation
- */
-
-interface IAnimationStep {
-    object: IObjectInfo;
-    nbStep: number;
-}
-
-const animationStepList: IAnimationStep[] = [
-    {
-        object: {
-            pizzaInfo: {
-                position: [3, 0, 0],
-                rotation: [0, 0, 0]
-            },
-            toolInfo: {
-                position: [3, 0, 0],
-                rotation: [0, -(C_PI_RAD / 2), 0]
-            }
-        },
-        nbStep: 50
-    }, {
-        object: {
-            pizzaInfo: {
-                position: [0, 0, -4],
-                rotation: [0, 0, 0]
-            },
-            toolInfo: {
-                position: [0, 0, -4],
-                rotation: [0, 0, 0]
-            }
-        },
-        nbStep: 50
-    },{
-        object: {
-            pizzaInfo: {
-                position: [0, 0, 0],
-                rotation: [0, 0, 0]
-            },
-            toolInfo: {
-                position: [0, 0, 10],
-                rotation: [0, 0, 0]
-            }
-        },
-        nbStep: 50
-    }
-];
-
-const generatePointIncrement = (pts: IVect3d, nbStep: number): IVect3d => {
-    return [
-        pts[0] / nbStep,
-        pts[1] / nbStep,
-        pts[2] / nbStep
-    ];
-}
-
-
-const generateStepAnimation = (origin: IObjectInfo, animationStepL: IAnimationStep): IAnimationStep => {
-
-    let _animationStep = cloneDeep(animationStepL);
-    //
-    _animationStep.object.pizzaInfo.position = generatePointIncrement(_animationStep.object.pizzaInfo.position, _animationStep.nbStep);
-    _animationStep.object.pizzaInfo.rotation = generatePointIncrement(_animationStep.object.pizzaInfo.rotation, _animationStep.nbStep);
-
-    _animationStep.object.toolInfo.position = generatePointIncrement(_animationStep.object.toolInfo.position, _animationStep.nbStep);
-    _animationStep.object.toolInfo.rotation = generatePointIncrement(_animationStep.object.toolInfo.rotation, _animationStep.nbStep);
-
-
-    return {
-        object: _animationStep.object,
-        nbStep: _animationStep.nbStep
-    };
-}
+import { addVect3d } from '../utils/vect3d';
+import { C_PI_RAD, IAnimationStep, IObjectInfo, animationStepList, generateStepAnimation, makeEmptyObjectInfo } from './pizzaView.logic';
+import RenderIngr from './RenderIngr/RenderIngr';
 
 // 0) init
 // 1) generate step animation for current position / rot
@@ -116,11 +16,7 @@ function PizzaView() {
     const [animationStep, setAnimationStep] = useState(0);
     const [animationData, setAnimationData] = useState<IAnimationStep>()
     const [objectInfo, setObjectInfo] = useState<IObjectInfo>(makeEmptyObjectInfo());
-    const threeRef = THREE.useThree();
     const pizzaModel = useGLTF(obj.pizzaRache);
-    const oliveModel = useGLTF(obj.olive);
-    const chorizoModel = useGLTF(obj.chorizon);
-    const mushroomModel = useGLTF(obj.mushroomSlice);
     const toolModel = useGLTF(obj.pizzaTool);
     const hovenModel = useGLTF(obj.hoven);
 
@@ -133,7 +29,7 @@ function PizzaView() {
         console.log(dataAnimStep);
         setAnimationData(dataAnimStep);
     }, [animationStep])
-    
+
 
     useEffect(() => {
         if (meshRef.current) {
@@ -152,12 +48,9 @@ function PizzaView() {
     useFrame(() => {
         storePizza.updateIngredient();
 
-        //
-        console.log("step : ", storePizza.step)
         if (storePizza.step === "waitCommand") {
             if (animationData && animationData?.nbStep && animationData?.nbStep > 0) {
                 let dupObjectInfo = cloneDeep(objectInfo);
-                
 
                 // update
                 dupObjectInfo.pizzaInfo.position = addVect3d(dupObjectInfo.pizzaInfo.position, animationData.object.pizzaInfo.position);
@@ -166,7 +59,7 @@ function PizzaView() {
                 dupObjectInfo.toolInfo.rotation = addVect3d(dupObjectInfo.toolInfo.rotation, animationData.object.toolInfo.rotation);
 
                 // @ts-ignore
-                setAnimationData(old => ({...old, nbStep : old?.nbStep - 1}))
+                setAnimationData(old => ({ ...old, nbStep: old?.nbStep - 1 }))
                 setObjectInfo(dupObjectInfo);
             }
             else if (animationData?.nbStep === 0 && animationStep < animationStepList.length - 1) {
@@ -221,40 +114,7 @@ function PizzaView() {
             />
             position={objectInfo.pizzaInfo.position}
     */}
-                {
-                    storePizza.ingredients.filter(e => e.kind === "olive").map((e) => <object3D
-                        key={`olive-${e.id}`}
-                        rotation={e.rot}
-                        position={addVect3d(e.pos, objectInfo.pizzaInfo.position)}
-                    >
-                        <primitive
-                            object={oliveModel.scene.clone()}
-                        />
-                    </object3D>)
-                }
-                {
-                    storePizza.ingredients.filter(e => e.kind === "chorizon").map((e) => <object3D
-                        key={`chorizon-${e.id}`}
-                        rotation={e.rot}
-                        position={addVect3d(e.pos, objectInfo.pizzaInfo.position)}
-                    >
-                        <primitive
-
-                            object={chorizoModel.scene.clone()}
-                        />
-                    </object3D>)
-                }
-                {
-                    storePizza.ingredients.filter(e => e.kind === "mushroom").map((e) => <object3D
-                        key={`mushroom-${e.id}`}
-                        rotation={e.rot}
-                        position={addVect3d(e.pos, objectInfo.pizzaInfo.position)}
-                    >
-                        <primitive
-                            object={mushroomModel.scene.clone()}
-                        />
-                    </object3D>)
-                }
+                <RenderIngr objectInfo={objectInfo} />
             </object3D>
             <axesHelper />
         </>

@@ -9,9 +9,6 @@ const Camera = () => {
     const [zoom, setZoom] = useState(20);
     const storePizza = useStorePizza();
 
-
-    //const [pos, setPos]
-
     useFrame(() => {
         // Make the camera always look at the origin (0, 0, 0)
         const origin = new Vector3(0, 0, 0);
