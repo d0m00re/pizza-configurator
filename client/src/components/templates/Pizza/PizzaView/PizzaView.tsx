@@ -6,7 +6,8 @@ import { useGLTF } from '@react-three/drei';
 import usePizzaStore from './../Store/pizza.zustand';
 import { IVect3d, infoSizePizza } from '../config/config';
 import cloneDeep from "lodash/cloneDeep";
-import Fire from '../components/Fire';
+//import Fire from '../components/Fire';
+import Fire2d from "../../Fire2d/Fire2d";
 
 const C_PI_RAD = 3.1415926536;
 
@@ -181,12 +182,13 @@ function PizzaView() {
         }
     })
 
+    //            <Fire /> 
+
     return (
         <>
             <pointLight position={[0, 1, 0]} intensity={1} color="#fff" />
 
-            <Fire />
-
+            <Fire2d />
             {/*}
             <object3D>
                 <primitive

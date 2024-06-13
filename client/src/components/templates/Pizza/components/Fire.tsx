@@ -4,8 +4,9 @@ import fireVertex from "./fireVertex.glsl?raw";
 import { useFrame } from '@react-three/fiber'
 
 //const sphere = new THREE.SphereGeometry(1, 28, 28);
-//const sphere = new THREE.PlaneGeometry(2, 2);
+//const sphere = new THREE.PlaneGeometry(4, 4, 500, 500);
 const sphere = new THREE.IcosahedronGeometry(1, 200);
+
 
 // Create a custom shader material
 

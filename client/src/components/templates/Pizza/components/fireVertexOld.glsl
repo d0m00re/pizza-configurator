@@ -1,10 +1,10 @@
 uniform float uTime;
+
 varying vec3 vPosition;
 varying vec3 vNormal;
 varying vec2 vUv;
+
 varying float vDisplacement;
-varying float vNoisePattern;
-#define PI 3.141592653589793
 
 //
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
@@ -80,39 +80,56 @@ vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);
  return 2.2 * n_xyz;
 }
 
-#define NUM_OCTAVES 5
+#define PI 3.141592653589793
 
-float fbm(vec3 x) {
-	float v = 0.0;
-	float a = 0.5;
-	vec3 shift = vec3(100);
-	for (int i = 0; i < NUM_OCTAVES; ++i) {
-		v += a * noise(x);
-		x = x * 2.0 + shift;
-		a *= 0.5;
-	}
-	return v;
+
+
+/* 
+* SMOOTH MOD
+* - authored by @charstiles -
+* based on https://math.stackexchange.com/questions/2491494/does-there-exist-a-smooth-approximation-of-x-bmod-y
+* (axis) input axis to modify
+* (amp) amplitude of each edge/tip
+* (rad) radius of each edge/tip
+* returns => smooth edges
+*/
+
+float smoothMod(float axis, float amp, float rad){
+    float top = cos(PI * (axis / amp)) * sin(PI * (axis / amp));
+    float bottom = pow(sin(PI * (axis / amp)), 2.0) + pow(rad, 2.0);
+    float at = atan(top / bottom);
+    return amp * (1.0 / 2.0) - (1.0 / PI) * at;
 }
 
-
-float fitBetween(float _min, float _max, float fitMin, float fitMax, float val) {
-    float t = (val - _min) / (_max - _min);
-    return fitMin + t * (fitMax - fitMin);
+// fit certain value at a certain range
+float fit(float unscaled, float originalMin, float originalMax, float minAllowed, float maxAllowed) {
+  return (maxAllowed - minAllowed) * (unscaled - originalMin) / (originalMax - originalMin) + minAllowed;
 }
+
+float wave(vec3 position) {
+  return fit(smoothMod(position.y * 6.0, 1.0, 1.5), 0.35, 0.6, 0.0, 1.0);
+
+}
+//
 
 void main() {
+        //
     vec3 coords = normal;
     coords.y += (uTime / 10.0);
-    //vec3 noisePattern = vec3(noise(coords));
-//    vNoisePattern = fitBetween(0.0, 1.0, 0.3, 0.7, noise(coords));
-   // vNoisePattern = noise(coords);//fbm(coords);
+    vec3 noisePattern = vec3(noise(coords));
+    float pattern = wave(noisePattern);
 
     // varying
     vPosition = position;
     vNormal = normal;
     vUv = uv;
+    vDisplacement = pattern;
+
+    float displacement = vDisplacement / 3.0;
+    
     // MVP : model view projection
-    vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+    vec3 newPosition = position + normal * displacement;
+    vec4 modelViewPosition = modelViewMatrix * vec4(newPosition, 1.0);
     vec4 projectedPosition = projectionMatrix * modelViewPosition;
     gl_Position = projectedPosition;
 }
