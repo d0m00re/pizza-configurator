@@ -8,7 +8,6 @@ import { useFrame } from '@react-three/fiber'
 const sphere = new THREE.IcosahedronGeometry(1, 200);
 
 // Create a custom shader material
-
 const customMaterial = new THREE.ShaderMaterial({
   uniforms: {
     // Define your uniforms here if any
@@ -16,7 +15,6 @@ const customMaterial = new THREE.ShaderMaterial({
   vertexShader: fireVertex,
   fragmentShader: fireFragment //fragmentShader
 });
-
 
 customMaterial.uniforms.uTime = { value: 0 }
 function Fire() {
