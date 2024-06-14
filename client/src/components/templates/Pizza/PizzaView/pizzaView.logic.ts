@@ -3,7 +3,6 @@ import { IVect3d } from "../utils/vect3d";
 
 export const C_PI_RAD = 3.1415926536;
 
-
 export interface IObjectInfo {
     pizzaInfo: {
         position: IVect3d;
@@ -18,7 +17,6 @@ export interface IObjectInfo {
 /**
  * each array elem describe animation step with target position and rotation
  */
-
 export interface IAnimationStep {
     object: IObjectInfo;
     nbStep: number;
@@ -62,7 +60,7 @@ export const animationStepList: IAnimationStep[] = [
             }
         },
         nbStep: 50
-    },{
+    }, {
         object: {
             pizzaInfo: {
                 position: [0, 0, 0],
@@ -85,7 +83,7 @@ const generatePointIncrement = (pts: IVect3d, nbStep: number): IVect3d => {
     ];
 }
 
-export const generateStepAnimation = (origin: IObjectInfo, animationStepL: IAnimationStep): IAnimationStep => {
+export const generateStepAnimation = (animationStepL: IAnimationStep): IAnimationStep => {
 
     let _animationStep = cloneDeep(animationStepL);
     //

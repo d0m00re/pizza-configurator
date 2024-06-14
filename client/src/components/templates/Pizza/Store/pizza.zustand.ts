@@ -1,10 +1,7 @@
 // src/store.ts
 import { create } from 'zustand';
 import type { } from '@redux-devtools/extension'; // required for devtools typing
-import { IGenIngredient, IGenIngredientElem, TKindIngrediant, TKindPizzaSize, infoIngredient } from '../config/config';
-
-export type TStepKind = "chooseSize" | "chooseIngrediant" | "buy" | "waitCommand";
-
+import { IGenIngredient, IGenIngredientElem, TKindIngrediant, TKindPizzaSize, TStepKind, infoIngredient } from '../config/config';
 
 export interface PizzaState {
   colorBase: string;

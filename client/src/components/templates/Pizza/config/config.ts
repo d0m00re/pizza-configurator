@@ -1,8 +1,11 @@
 import { IVect3d } from "../utils/vect3d";
 
 export type TKindIngrediant = "mushroom" | "olive" | "chorizon" | "cheese";
+export type TKindArr  = TKindIngrediant[];
 export type TKindPizzaSize = "small" | "medium" | "xl";
+export type TStepKind = "chooseSize" | "chooseIngrediant" | "buy" | "waitCommand";
 
+export const kindIngrArr : TKindArr = ["mushroom", "olive", "chorizon", "cheese"];
 
 export interface IGenIngredient {
     kind: TKindIngrediant;
@@ -43,5 +46,4 @@ export const infoSizePizza : Record<TKindPizzaSize, IInfoSize> = {
     small  :{ scale : [1, 1, 1]},
     medium  :{ scale : [1.5, 1.5, 1.5]},
     xl  :{ scale : [2, 2, 2]},
-
 }

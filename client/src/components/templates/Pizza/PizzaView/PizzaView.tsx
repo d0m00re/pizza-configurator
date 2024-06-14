@@ -8,7 +8,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { addVect3d } from '../utils/vect3d';
 import { C_PI_RAD, IAnimationStep, IObjectInfo, animationStepList, generateStepAnimation, makeEmptyObjectInfo } from './pizzaView.logic';
 import RenderIngr from './RenderIngr/RenderIngr';
-import FireShader from '../../Cube/FireShader/FireShader';
+import FireShader from '../../FireShader/FireShader';
 
 // 0) init
 // 1) generate step animation for current position / rot
@@ -25,9 +25,7 @@ function PizzaView() {
     const storePizza = usePizzaStore();
 
     useEffect(() => {
-        const dataAnimStep = generateStepAnimation(objectInfo, animationStepList[animationStep]);
-        console.log("data anim step")
-        console.log(dataAnimStep);
+        const dataAnimStep = generateStepAnimation(animationStepList[animationStep]);
         setAnimationData(dataAnimStep);
     }, [animationStep])
 

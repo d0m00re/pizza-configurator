@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import useStorePizza from "./../Store/pizza.zustand";
 
@@ -6,12 +5,11 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
 import { BuySelector, IngredientSelector, SizeSelector, WaitCommand } from "./components";
-import { TStepKind } from "../Store/pizza.zustand";
+import { TStepKind } from "../config/config";
 
 interface IRecordStep {
     id : number;
