@@ -40,18 +40,20 @@ const usePizzaStore = create<PizzaState>((set) => ({
           state.step = "chooseIngrediant";
       else if (state.step === "waitCommand")
           state.step = "buy";
-      return state;
+      return {...state};
     })
   },
   nextStep : () => {
+    console.log("next step")
     set((state) => {
+      console.log(`--> ${state.step}`)
       if (state.step === "chooseSize")
           state.step = "chooseIngrediant";
       else if (state.step === "chooseIngrediant")
           state.step = "buy";
       else if (state.step === "buy")
           state.step = "waitCommand";
-      return state;
+      return {...state};
     })
   },
   addIngredient: (kind, data) =>

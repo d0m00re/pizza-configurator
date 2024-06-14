@@ -4,7 +4,7 @@ import PizzaView from './PizzaView/PizzaView'
 
 function Pizza() {
   return (
-        <PizzaView />
+      <PizzaView />
   )
 }
 

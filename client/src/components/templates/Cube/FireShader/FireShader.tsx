@@ -5,7 +5,7 @@ import { useFrame } from '@react-three/fiber'
 import firemask from "./fire00.png"; //"./firemask2.jpeg"; //"./firemask.jpg";
 
 //const sphere = new THREE.SphereGeometry(1, 28, 28);
-const sphere = new THREE.PlaneGeometry(0.5, 0.5, 50, 50);
+const sphere = new THREE.PlaneGeometry(3., 1.4, 50, 50);
 
 //const sphere = new THREE.IcosahedronGeometry(1, 200);
 
@@ -36,7 +36,7 @@ function FireShader() {
 
   return (
     <mesh
-      position={[0, 0, 0]}
+      position={[2.9, -1.2, -3]}
       geometry={sphere}
       material={customMaterial} />
   )

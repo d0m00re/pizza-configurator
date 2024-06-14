@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { Vector3 } from 'three';
 import useStorePizza from "./../Store/pizza.zustand";
@@ -9,6 +9,7 @@ const Camera = () => {
     const [zoom, setZoom] = useState(20);
     const storePizza = useStorePizza();
 
+    
     useFrame(() => {
         // Make the camera always look at the origin (0, 0, 0)
         const origin = new Vector3(0, 0, 0);
@@ -21,8 +22,7 @@ const Camera = () => {
         // @ts-ignore
         cameraRef.current.lookAt(origin);
     });
-
-    return (
+        return (
         <PerspectiveCamera
             makeDefault
             ref={cameraRef}
@@ -34,6 +34,8 @@ const Camera = () => {
             zoom={zoom}
         />
     );
+
+  //  return (    <OrbitControls />)
 };
 
 export default Camera;

@@ -4,9 +4,6 @@ import Pizza from './components/templates/Pizza/Pizza';
 import { PizzaConfigurator } from './components/templates/Pizza';
 import "./index.css";
 import Camera from "./components/templates/Pizza/components/Camera";
-import FireShader from "./components/templates/Cube/FireShader/FireShader";
-
-//          <OrbitControls target={[0, 0, 0]} />
 
 function App() {
   return (
@@ -16,12 +13,12 @@ function App() {
         <THREE.Canvas shadows>
           <ambientLight intensity={0.5} />
           <directionalLight color="white" position={[0, 0, 5]} />
-          {/*<Pizza /> */}
-          <FireShader />
+          <Pizza />
           <PerspectiveCamera makeDefault position={[0, 2, 1]} />
           <Camera />
         </THREE.Canvas>
       </section>
+      
       <section className=" w-1/3 flex  justify-center items-center">
         <PizzaConfigurator />
       </section>

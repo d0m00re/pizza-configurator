@@ -8,6 +8,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { addVect3d } from '../utils/vect3d';
 import { C_PI_RAD, IAnimationStep, IObjectInfo, animationStepList, generateStepAnimation, makeEmptyObjectInfo } from './pizzaView.logic';
 import RenderIngr from './RenderIngr/RenderIngr';
+import FireShader from '../../Cube/FireShader/FireShader';
 
 // 0) init
 // 1) generate step animation for current position / rot
@@ -108,13 +109,14 @@ function PizzaView() {
                             />
                         </object3D> : <></>
                 }
+
+                {
+                    (storePizza.step === "waitCommand") ? <FireShader /> : <></>
+                }
                 
             <meshStandardMaterial
                 color={storePizza.colorBase}
             />
-            {/*
-            position={objectInfo.pizzaInfo.position}
-    */}
                 <RenderIngr objectInfo={objectInfo} />
             </object3D>
             <axesHelper />

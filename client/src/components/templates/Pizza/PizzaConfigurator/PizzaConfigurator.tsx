@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import useStorePizza from "./../Store/pizza.zustand";
 
@@ -12,19 +12,6 @@ import {
 } from "@/components/ui/card";
 import { BuySelector, IngredientSelector, SizeSelector, WaitCommand } from "./components";
 import { TStepKind } from "../Store/pizza.zustand";
-
-interface IStepPizza {
-    id: number
-    kind: TStepKind,
-    cpn: () => JSX.Element
-}
-
-
-const stepArr: IStepPizza[] = [
-    { id: 0, kind: "chooseSize", cpn: SizeSelector },
-    { id: 1, kind: "chooseIngrediant", cpn: IngredientSelector },
-    { id : 2, kind : "buy", cpn : BuySelector}
-];
 
 interface IRecordStep {
     id : number;
@@ -40,9 +27,8 @@ const recordStep : Record<TStepKind, IRecordStep> = {
 
 function PizzaConfigurator() {
     const storePizza = useStorePizza();
-
     const currentElem = recordStep[storePizza.step];
-  
+
     return (
         <Card className=" bg-slate-400 h-3/4">
             <CardHeader>
@@ -51,15 +37,8 @@ function PizzaConfigurator() {
             </CardHeader>
             <CardContent>
 
-            {
-
-            }
-                <currentElem.cpn />
-              {/*              
-                <IngredientSelector /> 
-
-                <SizeSelector />
-                */}
+            
+            <currentElem.cpn />
             </CardContent>
             <section className="flex gap-2 justify-center">
                 {(storePizza.step === "chooseSize") ?
