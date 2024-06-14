@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react'
 import { useFrame } from '@react-three/fiber';
-import * as obj from "./../model";
+import * as obj from "./../../../../assets/model";
 import { useGLTF } from '@react-three/drei';
 import usePizzaStore from './../Store/pizza.zustand';
 import { infoSizePizza } from '../config/config';

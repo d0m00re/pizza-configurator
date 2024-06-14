@@ -1,7 +1,7 @@
+import { useGLTF } from '@react-three/drei';
 import usePizzaStore from '../../Store/pizza.zustand';
 import { addVect3d } from '../../utils/vect3d';
-import { useGLTF } from '@react-three/drei';
-import * as obj from "./../../model";
+import * as obj from "./../../../../../assets/model";
 import { IObjectInfo } from '../pizzaView.logic';
 import { TKindIngrediant } from '../../config/config';
 

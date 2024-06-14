@@ -1,9 +1,9 @@
 import * as THREE from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { PerspectiveCamera } from '@react-three/drei';
 import Pizza from './components/templates/Pizza/Pizza';
 import { PizzaConfigurator } from './components/templates/Pizza';
-import "./index.css";
 import Camera from "./components/templates/Pizza/components/Camera";
+import "./index.css";
 
 function App() {
   return (

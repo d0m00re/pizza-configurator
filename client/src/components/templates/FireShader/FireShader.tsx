@@ -4,14 +4,9 @@ import fireVertex from "./shaderVertex.glsl?raw";
 import { useFrame } from '@react-three/fiber'
 import firemask from "./fire00.png"; //"./firemask2.jpeg"; //"./firemask.jpg";
 
-//const sphere = new THREE.SphereGeometry(1, 28, 28);
 const sphere = new THREE.PlaneGeometry(3., 1.4, 50, 50);
 
-//const sphere = new THREE.IcosahedronGeometry(1, 200);
-
-
 // Create a custom shader material
-
 const customMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uTime: { value: 0 },
@@ -23,16 +18,12 @@ const customMaterial = new THREE.ShaderMaterial({
 });
 
 customMaterial.uniforms.uTexture = {value : new THREE.TextureLoader().load(firemask)}
-console.log(customMaterial.uniforms)
-
 
 customMaterial.uniforms.u_time = { value: 0 }
 function FireShader() {
   useFrame((state, delta, xrFrame) => {
-    // console.log(customMaterial.uniforms.vTime.value);
     customMaterial.uniforms.uTime.value += delta;
   });
-
 
   return (
     <mesh
